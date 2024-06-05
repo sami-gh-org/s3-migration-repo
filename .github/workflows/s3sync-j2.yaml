@@ -1,0 +1,43 @@
+name: Sync Files to S3 with Rclone
+
+on: workflow_dispatch
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      id: creds
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+        role-session-name: "GitHubActionsSession"
+        output-credentials: true
+
+    - name: Install Rclone
+      run: |
+        curl https://rclone.org/install.sh | sudo bash
+    - name: Setup nginx
+      uses: cuchi/jinja2-action@v1.2.2
+      with:
+        template: rclone.template.conf.j2
+        output_file: rclone.prod.conf
+        variables: |
+          AWS_ACCESS_KEY_ID=${{steps.creds.outputs.aws-access-key-id}}
+          AWS_SECRET_ACCESS_KEY=${{ steps.creds.outputs.aws-secret-access-key }}
+          AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
+          AWS_REGION=${{secrets.AWS_REGION }}
+          FILEBASE_ACCESS_KEY_ID=${{ secrets.FILEBASE_ACCESS_KEY_ID }}
+          FILEBASE_SECRET_ACCESS_KEY=${{ secrets.FILEBASE_ACCESS_KEY_ID}}
+
+    - name: Showing  
+      run: cat rclone.prod.conf

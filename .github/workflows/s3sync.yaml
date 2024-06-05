@@ -1,9 +1,6 @@
 name: Sync Files to S3 with Rclone
 
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
   sync:
