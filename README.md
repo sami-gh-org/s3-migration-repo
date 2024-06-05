@@ -50,7 +50,3 @@ If you encounter the `SignatureDoesNotMatch` error, ensure:
 - The IAM role has the necessary permissions.
 
 Enable verbose logging by adding `-vv` to the `rclone` command for more detailed error messages.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
