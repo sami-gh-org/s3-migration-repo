@@ -3,6 +3,10 @@ on:
     workflow_dispatch: 
     schedule:
         - cron: '0 * * * *'
+permissions:
+    id-token: write
+    contents: read
+    
 jobs:
     s3sync:
         runs-on: ubuntu-latest
