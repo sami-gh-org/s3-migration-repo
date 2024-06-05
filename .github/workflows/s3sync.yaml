@@ -9,3 +9,5 @@ jobs:
         steps:
             - run: |
                 echo "hello"
+            - name: Install Rclone
+              run: sudo -v ; curl https://rclone.org/install.sh | sudo bash
