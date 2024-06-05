@@ -1,0 +1,11 @@
+name: s3 sync with filebase
+on:
+    workflow_dispatch: 
+    schedule:
+        - cron: '0 * * * *'
+jobs:
+    s3sync:
+        runs-on: ubuntu-latest
+        steps:
+            - run: |
+                echo "hello"
