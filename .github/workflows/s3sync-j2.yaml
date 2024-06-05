@@ -1,4 +1,4 @@
-name: Sync Files to S3 with Rclone
+name: Sync s3 with filebase using templating with jinja 2
 
 on: workflow_dispatch
 
