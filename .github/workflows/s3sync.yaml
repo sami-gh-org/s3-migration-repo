@@ -41,5 +41,5 @@ jobs:
               run: cat rclone.prod.conf
             
             - name: Execute Rclone Sync Job
-              run: rsync --config=rclone.prod.conf sync s3source:oidc-terraform-tfstate-file dstfilebase:migrate-s3
+              run: rclone --config=rclone.prod.conf sync s3source:oidc-terraform-tfstate-file dstfilebase:migrate-s3
               
