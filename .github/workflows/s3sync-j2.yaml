@@ -37,7 +37,7 @@ jobs:
           AWS_SESSION_TOKEN=${{ steps.creds.outputs.aws-session-token }}
           AWS_REGION=${{secrets.AWS_REGION }}
           FILEBASE_ACCESS_KEY_ID=${{ secrets.FILEBASE_ACCESS_KEY_ID }}
-          FILEBASE_SECRET_ACCESS_KEY=${{ secrets.FILEBASE_ACCESS_KEY_ID}}
+          FILEBASE_SECRET_ACCESS_KEY=${{ secrets.FILEBASE_SECRET_KEY_ID}}
 
     - name: Showing  
       run: cat rclone.prod.conf
