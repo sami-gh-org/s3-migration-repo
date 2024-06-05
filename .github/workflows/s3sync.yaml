@@ -54,8 +54,7 @@ jobs:
         echo "access_key_id = ${{ secrets.FILEBASE_ACCESS_KEY_ID }} >> ~/.config/rclone/rclone.conf
         echo "secret_access_key = ${{ secrets.FILEBASE_SECRET_KEY_ID }}" >> ~/.config/rclone/rclone.conf
         echo "region = us-east-1" >> ~/.config/rclone/rclone.conf
-        echo "endpoint = https://s3.filebase.com"
-
+        echo "endpoint = https://s3.filebase.com" >> ~/.config/rclone/rclone.conf
 
     - name: Sync files to S3
       run: |
