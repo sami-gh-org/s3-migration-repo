@@ -39,3 +39,7 @@ jobs:
                   FILEBASE_SECRET_ACCESS_KEY=${{ secrets.FILEBASE_SECRET_KEY_ID }}
             - name: Showing File Content
               run: cat rclone.prod.conf
+            
+            - name: Execute Rclone Sync Job
+              run: rsync --config=rclone.prod.conf sync s3source:oidc-terraform-tfstate-file dstfilebase:migrate-s3
+              
