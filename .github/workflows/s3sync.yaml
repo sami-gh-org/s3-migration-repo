@@ -1,44 +1,62 @@
-name: s3 sync with filebase
+name: Sync Files to S3 with Rclone
+
 on:
-    workflow_dispatch: 
-    schedule:
-        - cron: '0 * * * *'
-permissions:
-    id-token: write
-    contents: read
+  push:
+    branches:
+      - main
 
 jobs:
-    s3sync:
-        runs-on: ubuntu-latest
-        steps:
-            # - name: Configure AWS credentials
-            #   id: aws-creds
-            #   uses: aws-actions/configure-aws-credentials@v4
-            #   with:
-            #     role-to-assume: ${{ secrets.AWS_ROLE }}
-            #     aws-region: ${{ secrets.AWS_REGION }}
-            #     role-session-name: GH_SESSION
-            #     output-credentials: true
+  sync:
+    runs-on: ubuntu-latest
 
-            - name: Install Rclone
-              run: sudo -v ; curl https://rclone.org/install.sh | sudo bash
-            
-            - name: Git Checkout 
-              uses: actions/checkout@v3
-            
-            - name: Using Jinja 2 Action
-              uses: cuchi/jinja2-action@v1.2.2
-              with:
-                template: rclone.template.conf
-                output_file: rclone.prod.conf
-                variables: |
-                  AWS_ACCESS_KEY_ID=${{ secrets.AWS_KEY }}
-                  AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET}}
-                  FILEBASE_ACCESS_KEY_ID=${{ secrets.FILEBASE_ACCESS_KEY_ID }}
-                  FILEBASE_SECRET_ACCESS_KEY=${{ secrets.FILEBASE_SECRET_KEY_ID }}
-            - name: Showing File Content
-              run: cat rclone.prod.conf
-            
-            - name: Execute Rclone Sync Job
-              run: rclone --config=rclone.prod.conf sync s3source:newbuckertsami dstfilebase:migrate-s3
-              
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      id: creds
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ secrets.AWS_REGION }}
+        role-to-assume: ${{ secrets.AWS_ROLE }}
+        role-session-name: "GitHubActionsSession"
+        output-credentials: true
+
+    - name: Install Rclone
+      run: |
+        curl https://rclone.org/install.sh | sudo bash
+
+    - name: Configure Rclone
+      env:
+        AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id}}
+        AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
+        AWS_SESSION_TOKEN: ${{ steps.creds.outputs.aws-session-token }}
+        FILEBASE_KEY: ${{ secrets.FILEBASE_ACCESS_KEY_ID  }}
+        FILEBASE_SECRET: ${{ secrets.FILEBASE_SECRET_KEY_ID }}
+      run: |
+        mkdir -p ~/.config/rclone
+        echo "[s3source]" > ~/.config/rclone/rclone.conf
+        echo "type = s3" >> ~/.config/rclone/rclone.conf
+        echo "provider = AWS" >> ~/.config/rclone/rclone.conf
+        echo "access_key_id = $AWS_ACCESS_KEY_ID" >> ~/.config/rclone/rclone.conf
+        echo "secret_access_key = $AWS_SECRET_ACCESS_KEY" >> ~/.config/rclone/rclone.conf
+        echo "session_token = $AWS_SESSION_TOKEN" >> ~/.config/rclone/rclone.conf
+        echo "region = eu-west-3" >> ~/.config/rclone/rclone.conf
+
+
+        echo "[dstfilebase]" >> ~/.config/rclone/rclone.conf
+        echo "type = s3" >> ~/.config/rclone/rclone.conf
+        echo "provider = AWS" >> ~/.config/rclone/rclone.conf
+        echo "access_key_id = $FILEBASE_KEY" >> ~/.config/rclone/rclone.conf
+        echo "secret_access_key = $FILEBASE_SECRET" >> ~/.config/rclone/rclone.conf
+        echo "region = us-east-1" >> ~/.config/rclone/rclone.conf
+        echo "endpoint = https://s3.filebase.com"
+
+
+    - name: Sync files to S3
+      run: |
+        rclone -vv --config ~/.config/rclone/rclone.conf sync s3source:oidc-terraform-tfstate-file dstfilebase:migrate-s3
