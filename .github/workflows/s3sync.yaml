@@ -15,7 +15,7 @@ jobs:
               id: aws-creds
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsRole
+                role-to-assume: ${{ secrets.AWS_ROLE }}
                 aws-region: us-east-1 
                 output-credentials: true
 
