@@ -40,5 +40,5 @@ jobs:
               run: cat rclone.prod.conf
             
             - name: Execute Rclone Sync Job
-              run: rclone --config=rclone.prod.conf sync s3source:newbuckertsami dstfilebase:migrate-s3
+              run: rclone --config=rclone.prod.conf sync s3source:s3://newbuckertsami dstfilebase:migrate-s3
               
