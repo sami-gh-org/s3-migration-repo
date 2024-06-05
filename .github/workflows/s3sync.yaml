@@ -17,9 +17,8 @@ jobs:
               with:
                 role-to-assume: ${{ secrets.AWS_ROLE }}
                 aws-region: eu-west-3
-                role-session-name: arn:aws:iam::767397735708:role/oidc-role
+                role-session-name: GH_SESSION
                 output-credentials: true
-
 
             - name: Install Rclone
               run: sudo -v ; curl https://rclone.org/install.sh | sudo bash
