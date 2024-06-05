@@ -2,14 +2,14 @@
 type = s3
 provider = AWS
 access_key_id = {{ AWS_ACCESS_KEY_ID }}
-secret_access_key = ${{ AWS_SECRET_ACCESS_KEY }}
-session_token = ${{ AWS_SESSION_TOKEN }}
-region = ${{ AWS_REGION }}
+secret_access_key = {{ AWS_SECRET_ACCESS_KEY }}
+session_token = {{ AWS_SESSION_TOKEN }}
+region = {{ AWS_REGION }}
 
 [dstfilebase]
 type = s3
 provider = Other
 access_key_id = {{ FILEBASE_ACCESS_KEY_ID }}
-secret_access_key = ${{ FILEBASE_SECRET_ACCESS_KEY }}
+secret_access_key = {{ FILEBASE_SECRET_ACCESS_KEY }}
 region = us-east-1
 endpoint = https://s3.filebase.com
