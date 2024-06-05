@@ -11,14 +11,14 @@ jobs:
     s3sync:
         runs-on: ubuntu-latest
         steps:
-            - name: Configure AWS credentials
-              id: aws-creds
-              uses: aws-actions/configure-aws-credentials@v4
-              with:
-                role-to-assume: ${{ secrets.AWS_ROLE }}
-                aws-region: ${{ secrets.AWS_REGION }}
-                role-session-name: GH_SESSION
-                output-credentials: true
+            # - name: Configure AWS credentials
+            #   id: aws-creds
+            #   uses: aws-actions/configure-aws-credentials@v4
+            #   with:
+            #     role-to-assume: ${{ secrets.AWS_ROLE }}
+            #     aws-region: ${{ secrets.AWS_REGION }}
+            #     role-session-name: GH_SESSION
+            #     output-credentials: true
 
             - name: Install Rclone
               run: sudo -v ; curl https://rclone.org/install.sh | sudo bash
