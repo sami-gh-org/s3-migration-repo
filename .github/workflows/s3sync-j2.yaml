@@ -41,3 +41,7 @@ jobs:
 
     - name: Showing  
       run: cat rclone.prod.conf
+
+
+    - name: Rclone Step 
+      run: rclone -vv --config rclone.prod.conf sync s3source:newbuckertsami dstfilebase:newbucket
