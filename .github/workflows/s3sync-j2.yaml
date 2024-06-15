@@ -26,7 +26,7 @@ jobs:
     - name: Install Rclone
       run: |
         curl https://rclone.org/install.sh | sudo bash
-    - name: Setup nginx
+    - name: Rclone using Jinja 2 Actions
       uses: cuchi/jinja2-action@v1.2.2
       with:
         template: rclone.template.conf.j2
